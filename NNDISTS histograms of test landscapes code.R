@@ -4,7 +4,7 @@
 #LOAD DESIRED LANDSCAPE DATA HERE ***you may modify this***
 ############################################################################################################
 ############################################################################################################
-directory="C:/Users/abuga/Desktop/Final Metapop R Package/changing to mean min/50 patches"
+directory="C:/Users/abuga/Desktop/Metapopulation Manuscript Output"
 landscapes.data<-read.csv("50_p_10landscapes_clevel500.csv")
 ############################################################################################################
 ############################################################################################################
