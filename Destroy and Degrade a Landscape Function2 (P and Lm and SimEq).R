@@ -30,11 +30,13 @@ destroy.vs.degrade<-function(landscape, a, delta){
   lambda.M.r<-rep(NA, n.patches)
   eq.size.r<-rep(NA, n.patches)
   time.to.eq.r<-rep(NA, n.patches)
+  time.to.p1000.r<-rep(NA, n.patches)
   sim.eq.size.r<-rep(NA, n.patches)
   lambda.M.e<-rep(NA, n.patches)
   eq.size.e<-rep(NA, n.patches)
   sim.eq.size.e<-rep(NA, n.patches)
   time.to.eq.e<-rep(NA, n.patches)
+  time.to.p1000.e<-rep(NA, n.patches)
   percent.habitatloss<-rep(NA, n.patches)
   eq.p.r<-rep(NA, n.patches)
   eq.p.e<-rep(NA, n.patches)
@@ -58,8 +60,9 @@ destroy.vs.degrade<-function(landscape, a, delta){
     eq.p.r[j]<-sum(p.star.r)
     avg.p.r[j]<-sum(p.star.r)/(n.patches-j+1)
     #SIMULATE SRLM AND PROVIDE TO GET TIME EXTINCT AND SIZE AT EQUILIBRIUM 
-    SRLM.output.r<-SRLM.sim(landscape=w, a=a, delta=delta, timesteps=1000, p.initial=avg.p.r[1], p.star=p.star.r)#set the initial P* for the simulation to be the P* of the previous amount of habitat
+    SRLM.output.r<-SRLM.sim(landscape=w, a=a, delta=delta, timesteps=1000, p.initial=avg.p.r[1], avg.p=avg.p.r[j])#set the initial P* for the simulation to be the P* of the previous amount of habitat
     time.to.eq.r[j]<-SRLM.output.r$time.to.eq
+    time.to.p1000.r[j]<-SRLM.output.r$time.to.p1000
     sim.eq.size.r[j]<-SRLM.output.r$eq.size/(n.patches-j+1)
     #cALCULATE P.star.e
     p.star.e<-pstar.function(landscape = e.landscape, a=a, delta=delta, iterations=1000)
@@ -67,8 +70,9 @@ destroy.vs.degrade<-function(landscape, a, delta){
     eq.p.e[j]<-sum(p.star.e)
     avg.p.e[j]<-sum(p.star.e)/n.patches
     #sim of eroding landscape
-    SRLM.output.e<-SRLM.sim(landscape=e.landscape, a=a, delta=delta, timesteps=1000, p.initial=avg.p.r[1], p.star=p.star.e) #set the initial P* for the simulation to be the P* of the previous amount of habitat
+    SRLM.output.e<-SRLM.sim(landscape=e.landscape, a=a, delta=delta, timesteps=1000, p.initial=avg.p.r[1], avg.p=avg.p.e[j]) #set the initial P* for the simulation to be the P* of the previous amount of habitat
     time.to.eq.e[j]<-SRLM.output.e$time.to.eq
+    time.to.p1000.e[j]<-SRLM.output.e$time.to.p1000
     sim.eq.size.e[j]<-SRLM.output.e$eq.size/n.patches
     #REMOVE A RANDOM PATCH FROM THE LANDSCAPE UNDERGOING DESTRUCTION
     x<-w$patch.ID
@@ -107,13 +111,15 @@ destroy.vs.degrade<-function(landscape, a, delta){
                      eq.p.r,
                      avg.p.r,
                      time.to.eq.r,
+                     time.to.p1000.r,
                      sim.eq.size.r,
                      percent.habitatloss,
                      lambda.M.e,
                      eq.size.e,
                      eq.p.e,
                      avg.p.e,
-                     time.to.eq.e, 
+                     time.to.eq.e,
+                     time.to.p1000.e,
                      sim.eq.size.e,
                      delta
   )
