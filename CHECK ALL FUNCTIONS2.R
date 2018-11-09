@@ -1,6 +1,6 @@
 rm(list=ls()) #clear workspace
 
-setwd("C:/Users/Administrator/Desktop/Manuscript/Functions") #access working directory that all my metapop functions are stored in
+setwd("C:/Users/Administrator/Desktop/Metapopulation-Simulation-Package-master") #access working directory that all my metapop functions are stored in
 source("Create Landscape Function.r") #load create.landscape.function
 source("Lambda M Function.r") #load the calculate lamda.M.function
 source("Pstar Function.r") #load the persistence.function
