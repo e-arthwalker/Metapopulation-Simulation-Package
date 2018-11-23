@@ -16,7 +16,7 @@ source("Choose Alphas Function meanmins2.r") #load choose alphas function
 n.patches=50
 landscape.limit=100
 no.runs=500
-no.replicates=50
+no.replicates=100
 directory="C:/Users/abuga/Desktop/Metapopulation-Simulation-Package-master"
 landscape.types=c("regular", "random", "clustered")
 landscapes.data<-create.multiple.landscapes(n.patches=n.patches, landscape.limit=landscape.limit, no.runs=no.runs, no.replicates=no.replicates, landscape.types=landscape.types, directory=directory)
