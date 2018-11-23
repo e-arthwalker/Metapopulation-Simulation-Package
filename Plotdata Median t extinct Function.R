@@ -33,6 +33,10 @@ plotdata.median.sim.eq<-function(input.data){
     else{
       degradation.upper.CI[i]<-CI$basic[5]
       degradation.lower.CI[i]<-CI$basic[4]}
+    if(destruction.upper.CI[i]>1){destruction.upper.CI[i]<-1}
+    if(destruction.lower.CI[i]>1){destruction.lower.CI[i]<-1}
+    if(destruction.upper.CI[i]<0){destruction.upper.CI[i]<-0}
+    if(destruction.lower.CI[i]<0){destruction.lower.CI[i]<-0}
   }
   plot.data<-data.frame(percent.loss=seq(0,1,0.05), destruction.median, destruction.upper.CI, destruction.lower.CI, degradation.median, degradation.upper.CI, degradation.lower.CI)
   return(plot.data)

@@ -28,6 +28,11 @@ plotdata.median.t.eq<-function(input.data){
     degradation.median[i] <- median(x$time.to.eq.e)
     bootobject <- boot(x$time.to.eq.e, function(u,j) median(u[j]), R=1000)
     CI<-boot.ci(bootobject, conf=0.95, type="basic")}
+  if(is.null(CI)==TRUE){degradation.upper.CI[i]<-degradation.median[i]
+  degradation.lower.CI[i]<-degradation.median[i]}
+  else{
+    degradation.upper.CI[i]<-CI$basic[5]
+    degradation.lower.CI[i]<-CI$basic[4]}
   plot.data<-data.frame(percent.loss=seq(0,1,0.05), destruction.median, destruction.upper.CI, destruction.lower.CI, degradation.median, degradation.upper.CI, degradation.lower.CI)
   return(plot.data)
 }

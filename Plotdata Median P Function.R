@@ -1,4 +1,4 @@
-#Calculating data for plots (binning destruction and calculating median lamda.M for percent loss
+#Calculating data for plots (binning destruction and calculating median lambda.M for percent loss
 #, using median because it reflects that the data distribution is heavily skewed,
 #, confidence intervals claculated using bootstrapping)
 ##############################################################################################################
