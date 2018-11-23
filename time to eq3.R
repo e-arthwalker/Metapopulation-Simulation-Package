@@ -66,8 +66,8 @@ SRLM.sim<-function(landscape, a, delta, timesteps, p.initial, avg.p){
   if (any((end.size-1) < metapop & metapop < (end.size+1))) {
     time.to.p1000<-which.max((end.size-1) < metapop & metapop < (end.size+1)) #finds first metapop entry at p.1000
   } else { time.to.p1000<-NA }#time.to.p1000=NA (shouldn't ever happen)
-  if (any((metapop/n.patches) < (avg.p+(sqrt(avg.p*(1-avg.p))/sqrt(n.patches))))) { # plus standard error of a binomial distribution
-    time.to.eq<-which.max((metapop/n.patches) < (avg.p+(sqrt(avg.p*(1-avg.p))/sqrt(n.patches)))) #finds first metapop entry at avg. expected p.star
+  if (any((metapop/n.patches) <= (avg.p+(sqrt(avg.p*(1-avg.p))/sqrt(n.patches))))) { # plus standard error of a binomial distribution
+    time.to.eq<-which.max((metapop/n.patches) <= (avg.p+(sqrt(avg.p*(1-avg.p))/sqrt(n.patches)))) #finds first metapop entry at avg. expected p.star
     } else { time.to.eq<-NA}#time.to.eq=NA if never hits eq
   data<-list(#metapop=metapop, #include metapop to check
     eq.size=end.size, time.to.p1000=time.to.p1000, time.to.eq=time.to.eq)
