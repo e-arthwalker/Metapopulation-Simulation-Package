@@ -16,8 +16,8 @@ plotdata.median.sim.eq<-function(input.data){
   for (i in 1:length(bins)) {
     x<-subset(input.data, input.data$binned.percent.loss==bins[i])
     #destruction
-    destruction.median[i] <- median(x$time.to.P1000.r)
-    bootobject <- boot(x$time.to.P1000.r, function(u,j) median(u[j]), R=1000)
+    destruction.median[i] <- median(x$sim.eq.size.r)
+    bootobject <- boot(x$sim.eq.size.r, function(u,j) median(u[j]), R=1000)
     CI<-boot.ci(bootobject, conf=0.95, type="basic")
     if(is.null(CI)==TRUE){destruction.upper.CI[i]<-destruction.median[i]
     destruction.lower.CI[i]<-destruction.median[i]}
@@ -25,8 +25,8 @@ plotdata.median.sim.eq<-function(input.data){
       destruction.upper.CI[i]<-CI$basic[5]
       destruction.lower.CI[i]<-CI$basic[4]}
     #degradation
-    degradation.median[i] <- median(x$time.to.P1000.e)
-    bootobject <- boot(x$time.to.P1000.e, function(u,j) median(u[j]), R=1000)
+    degradation.median[i] <- median(x$sim.eq.size.e)
+    bootobject <- boot(x$sim.eq.size.e, function(u,j) median(u[j]), R=1000)
     CI<-boot.ci(bootobject, conf=0.95, type="basic")
     if(is.null(CI)==TRUE){degradation.upper.CI[i]<-degradation.median[i]
     degradation.lower.CI[i]<-degradation.median[i]}

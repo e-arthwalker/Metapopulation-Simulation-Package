@@ -34,7 +34,7 @@ parallel.alphas<-function(j, n.reps, k){
 its.of.5=10
 output<- foreach (k=1:5, .combine=rbind)  %:%
  foreach(i=((k*8)-7):(k*8), .combine=rbind) %dopar% parallel.alphas(j=i-((k-1)*8), n.reps=its.of.5, k=k)
-write.csv(output, "50reps_PnLMnSimEq_3_50pnew.csv")
+write.csv(output, "50reps_PnLMnSimEq_3_50pnew2.csv")
 
 
 # turn parallel processing off and run sequentially again:

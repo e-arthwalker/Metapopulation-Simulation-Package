@@ -29,15 +29,13 @@ pal <- choose_palette()
 
 #READING IN DATA
 ################################################################################################################
-data.set<-read.csv("C:/Users/abuga/Desktop/Metapopulation Manuscript Output/50reps_PnLMnSimEq_3_50pnew.csv")
+data.set<-read.csv("C:/Users/abuga/Desktop/Metapopulation Manuscript Output/50reps_PnLMnSimEq_3_50p.csv")
 ################################################################################################################
 
 #ADD IN A SCALED TIME TO EQ COLUMN
 #######################################################################################################
-#data.set$t.to.eq.by.lm.r<-data.set$time.to.eq.r/data.set$lambda.M.r
-#data.set$t.to.eq.by.lm.e<-data.set$time.to.eq.e/data.set$lambda.M.e
-data.set$time.to.eq.r[is.na(data.set$time.to.eq.r)]<-1000 #if it never reached eq say it took 1000 timesteps
-data.set$time.to.eq.e[is.na(data.set$time.to.eq.e)]<-1000 #if it never reached eq say it took 1000 timesteps
+data.set$t.to.eq.by.lm.r<-data.set$time.to.eq.r/data.set$lambda.M.r
+data.set$t.to.eq.by.lm.e<-data.set$time.to.eq.e/data.set$lambda.M.e
 #######################################################################################################
 
 #SUBSETTING THE DATA FOR A GIVEN LANDSCAPE TYPE
@@ -56,12 +54,11 @@ return(a)}
 ################################################################################################################
 #CHECK a<-get.a(data)
 
-
-#CLEANING DATA ***UPDATED
+#CLEANING DATA
 ################################################################################################################
 clean.data<-function(a, data){
 data<-data[data$delta>1/100000,] #removing landscape data in which the only reason the species is persisting is because of the base colinization probablity
-data<-data[complete.cases(data[ , 8]),]  #getting rid of rows with NA's in all but... where 0 patches are in the landscape giving a NA for lm
+data<-data[complete.cases(data[ , 8]),]  #getting rid of rows with NA's in all but the time extinct column (based on values in column 8)
 #exclude any data for which there are less than 20 replicates
 df2<-NULL
 for (i in 1:length(a)){
@@ -293,11 +290,11 @@ tplot.data<-function(deltas, data){
 
 plot.t<-function(plot.data, landscape.type, a, title){
   print(ggplot(data=plot.data[complete.cases(plot.data[,1:7]),]) + theme_classic()
-        + geom_ribbon(aes(x=percent.loss, ymin= destruction.lower.CI, ymax=destruction.upper.CI, group=(1/a), fill=factor(1/a)), alpha=0.3)
-        + geom_line(aes(x = percent.loss, y = destruction.median, group=(1/a), colour=1/(a)), size=1) 
-        #+ geom_ribbon(aes(x=percent.loss, ymin= degradation.lower.CI, ymax=degradation.upper.CI, group=(1/a), fill=factor(1/a)), alpha=0.3)
-        #+ geom_line(aes(x = percent.loss, y = degradation.median, group=(1/a), colour=1/(a)), size=1, linetype="dashed") 
-        + labs(x = "Percent Habitat Loss", y = "time to Expected Equilibrium", 
+        #+ geom_ribbon(aes(x=percent.loss, ymin= destruction.lower.CI, ymax=destruction.upper.CI, group=(1/a), fill=factor(1/a)), alpha=0.3)
+        #+ geom_line(aes(x = percent.loss, y = destruction.median, group=(1/a), colour=1/(a)), size=1) 
+        + geom_ribbon(aes(x=percent.loss, ymin= degradation.lower.CI, ymax=degradation.upper.CI, group=(1/a), fill=factor(1/a)), alpha=0.3)
+        + geom_line(aes(x = percent.loss, y = degradation.median, group=(1/a), colour=1/(a)), size=1, linetype="dashed") 
+        + labs(x = "Percent Habitat Loss", y = "time to P1000", 
                title = paste0(title, " Landscapes"))
         + scale_colour_gradient("Dispersal Ability",low = pal(8),high = "light grey", trans="log", breaks = c(100, 8, 4, 2, 1, 0.5, 0.25, 0.125), labels = rev(c("1/8x", "1/4x", "1/2x", "Avg Min Nearest Neighbour", "2x", "4x", "8x", "Global Dispersal"))) #
         + scale_fill_manual(values=pal(8), guide="none")
@@ -305,7 +302,7 @@ plot.t<-function(plot.data, landscape.type, a, title){
         + theme(legend.text=element_text(size=12))
         + theme(legend.key.size = unit(1.5, "cm"))
         + theme(legend.title = element_text(size=17, vjust=20))
-        + xlim(0,1) + ylim(0,1000)
+        + xlim(0,1) + ylim(0,100)
         + theme(legend.position="none") #to remove legend
   )
 }
@@ -325,61 +322,9 @@ graph.t<-function(data.set, landscape.type, title){
 plot1<-graph.t(data.set, "regular", "More Uniform")
 plot2<-graph.t(data.set, "random", "Random")
 plot3<-graph.t(data.set, "clustered", "More Clustered")
-
-####
-#time to expected extinction GRAPH
-tplot.data<-function(deltas, data){
-  data<-data[data$sim.eq.size.r==0 & data$avg.p.r==0,] #subset the data to only include entries where extinction occured for destruction
-  deltas<-na.omit(deltas)
-  plot.data<-NULL
-  for (i in 1:length(deltas$a)){
-    df3<-plotdata.median.t.eq(data[data$alpha==deltas$a[i], ])
-    df3<-data.frame(a=rep(deltas$a[i], nrow(df3)), avg.disp=rep(deltas$avg.disp[i], nrow(df3)), df3)
-    plot.data<-rbind(plot.data, df3)
-  }
-  return(plot.data)
-}
-#CHECK plot.data<-tplot.data(deltas, data)
-
-plot.t<-function(plot.data, landscape.type, a, title){
-  print(ggplot(data=plot.data[complete.cases(plot.data[,1:7]),]) + theme_classic()
-        + geom_ribbon(aes(x=percent.loss, ymin= destruction.lower.CI, ymax=destruction.upper.CI, group=(1/a), fill=factor(1/a)), alpha=0.3)
-        + geom_line(aes(x = percent.loss, y = destruction.median, group=(1/a), colour=1/(a)), size=1) 
-        #+ geom_ribbon(aes(x=percent.loss, ymin= degradation.lower.CI, ymax=degradation.upper.CI, group=(1/a), fill=factor(1/a)), alpha=0.3)
-        #+ geom_line(aes(x = percent.loss, y = degradation.median, group=(1/a), colour=1/(a)), size=1, linetype="dashed") 
-        + labs(x = "Percent Habitat Loss", y = "time to Expected Equilibrium", 
-               title = paste0(title, " Landscapes"))
-        + scale_colour_gradient("Dispersal Ability",low = pal(8),high = "light grey", trans="log", breaks = c(100, 8, 4, 2, 1, 0.5, 0.25, 0.125), labels = rev(c("1/8x", "1/4x", "1/2x", "Avg Min Nearest Neighbour", "2x", "4x", "8x", "Global Dispersal"))) #
-        + scale_fill_manual(values=pal(8), guide="none")
-        + theme(text = element_text(size=15))
-        + theme(legend.text=element_text(size=12))
-        + theme(legend.key.size = unit(1.5, "cm"))
-        + theme(legend.title = element_text(size=17, vjust=20))
-        + xlim(0,1) + ylim(0,1000)
-        + theme(legend.position="none") #to remove legend
-  )
-}
-#CHECK plot.P(plot.data, landscape.type, a, title)
-
-landscape.type="clustered"
-title="More Clustered"
-graph.t<-function(data.set, landscape.type, title){
-  data<-subset.landscape(data.set, landscape.type)
-  a<-get.a(data)
-  data<-clean.data(a, data)
-  deltas<-get.deltas(a, data, landscape.type)
-  plot.data<-tplot.data(deltas, data)
-  plot.t(plot.data, landscape.type, a, title)
-}
-
-plot1<-graph.t(data.set, "regular", "More Uniform")
-plot2<-graph.t(data.set, "random", "Random")
-plot3<-graph.t(data.set, "clustered", "More Clustered")
-
 
 ####
 #time extinct only GRAPH ***95% CI's not working but should be able to fix
-#you need to update the function below with whether it's e or r you want this for***
 texplot.data<-function(deltas, data){
   data<-data[data$sim.eq.size.r==0,] #subset the data to only include entries where extinction occured for destruction
   deltas<-na.omit(deltas)
