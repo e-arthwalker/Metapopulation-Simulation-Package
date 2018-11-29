@@ -84,10 +84,10 @@ destroy.vs.degrade<-function(landscape, a, delta){
     SRLM.output.e<-SRLM.sim(landscape=e.landscape, a=a, delta=delta, timesteps=1000, p.initial=avg.p.r[1], avg.p=avg.p.e[j])
     #set the initial P* for the simulation to be the P* of the pristine landscape and the average expected occupancy at eq
     #to that expected for this amount of habitat losstime.to.eq.e[j]<-SRLM.output.e$time.to.eq
-    time.to.eq.e[j]<-SRLM.output.r$time.to.eq #timestep at which the equilibrium was hit or dipped to less
-    time.to.p1000.e[j]<-SRLM.output.r$time.to.p1000 #timestep at which the metapopulation reached what it's average occupancy 
+    time.to.eq.e[j]<-SRLM.output.e$time.to.eq #timestep at which the equilibrium was hit or dipped to less
+    time.to.p1000.e[j]<-SRLM.output.e$time.to.p1000 #timestep at which the metapopulation reached what it's average occupancy 
     #for the last 50 of 1000 timesteps would be
-    sim.eq.size.e[j]<-SRLM.output.r$eq.size/(n.patches) #average number of patches that were occupied on average for the 
+    sim.eq.size.e[j]<-SRLM.output.e$eq.size/(n.patches) #average number of patches that were occupied on average for the 
     #last 50 of 1000 timesteps
     #REMOVE A RANDOM PATCH FROM THE LANDSCAPE UNDERGOING DESTRUCTION
     x<-w$patch.ID
