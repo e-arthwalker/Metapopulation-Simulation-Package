@@ -32,15 +32,19 @@ pal <- choose_palette()
 data.set<-read.csv("C:/Users/abuga/Desktop/Metapopulation Manuscript Output/50reps_PnLMnSimEq_3_50pnew2.csv")
 ################################################################################################################
 
-data.set$sim.eq.size.r < data.set$avg.p.r
+#a quick check to make certain that t.to.P1000 is never < t.to.EQ if P1000 < EQ
+####################################################################
 potato<-data.set[data.set$sim.eq.size.r < data.set$avg.p.r,]
-head(potato)
-cheese<-subset(potato, initial.landscape.patch.ID>0,)
-head(potato)
-head(cheese)
+potato<-subset(potato, initial.landscape.patch.ID>0) #removing NA's
 potato<-potato[potato$time.to.eq.r!=1000,]
 sum(potato$time.to.p1000.r < potato$time.to.eq.r)
-head(potato[potato$time.to.eq.r < potato$time.to.p1000.r,])
+
+potato<-data.set[data.set$sim.eq.size.e < data.set$avg.p.e,]
+potato<-subset(potato, initial.landscape.patch.ID>0) #removing NA's
+potato<-potato[potato$time.to.eq.e!=1000,]
+sum(potato$time.to.p1000.e < potato$time.to.eq.e)
+head(potato[potato$time.to.p1000.e < potato$time.to.eq.e,])
+#######################################################################
 
 #ADD IN A SCALED TIME TO EQ COLUMN
 #######################################################################################################
@@ -71,7 +75,7 @@ return(a)}
 ################################################################################################################
 clean.data<-function(a, data){
 data<-data[data$delta>1/100000,] #removing landscape data in which the only reason the species is persisting is because of the base colinization probablity
-data<-subset(data, initial.landscape.patch.ID>0,)#removing rows of NA's for when no patches are left
+data<-subset(data, initial.landscape.patch.ID>0) #removing rows of NA's for when no patches are left
 #exclude any data for which there are less than 20 replicates
 df2<-NULL
 for (i in 1:length(a)){
