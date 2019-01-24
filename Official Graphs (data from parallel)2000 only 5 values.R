@@ -141,10 +141,10 @@ plot.LM<-function(plot.data, landscape.type, a, title){
         + geom_hline(aes(yintercept=0.05), color="black", size=1) 
         + labs(x = "Percent Habitat Loss", y = "Persistence Capacity Final/Intial", 
                title = paste0(title, " Landscapes"))
-        + scale_colour_gradient("Dispersal Ability",low = pal(8),high = "light grey", 
+        + scale_colour_gradient("Dispersal Ability", low = pal(8), high = "light grey", 
                                 trans="log", 
-                                breaks = c(100, 8, 4, 2, 1, 0.25, 0.125, 0.0625), 
-                                labels = rev(c("1/16x", "1/8x", "1/4x", "Avg Min Nearest Neighbour", "2x", "4x", "8x", "Global Dispersal")),
+                                breaks = c(100, 4, 1, 0.25, 0.125), 
+                                labels = rev(c("1/8x", "1/4x", "Avg Min Nearest Neighbour", "4x", "Global Dispersal")),
                                 guide="legend") #
         + scale_fill_manual(values=pal(8), guide="none")
         + theme(text = element_text(size=15))
@@ -165,6 +165,12 @@ graph.LM<-function(data.set, landscape.type, title){
   data<-clean.data(a, data)
   deltas<-get.deltas(a, data, landscape.type)
   plot.data<-LMplot.data(deltas, data)
+  plot.data<-subset(plot.data, 
+                    avg.disp=="1/8x Avg Min Nearest Neighbour Distance" | 
+                      avg.disp=="1/4x Avg Min Nearest Neighbour Distance" |
+                      avg.disp=="1x Avg Min Nearest Neighbour Distance" |
+                      avg.disp=="4x Avg Min Nearest Neighbour Distance" |
+                      avg.disp=="Global Dispersal" )
   plot<-plot.LM(plot.data, landscape.type, a, title)
 }
 
